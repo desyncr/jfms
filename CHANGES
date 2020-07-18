@@ -1,0 +1,116 @@
+Changelog for jfms
+
+2020-02-16 - 0.8
+	* trust list calculation is now based on flow-based reputation
+	  - default TLT for seed identities is now 90
+	  - existing seed identities with default TLT will be changed on update
+	* support delayed sending of messages
+	* fix NullPointerException if avatars are disabled
+	* fix IllegalArgumentException if URI contains $
+	* database maintenance is now working again (broken in 0.7)
+
+2019-10-19 - 0.7
+	* add "mark all messages read" menu item
+	* support avatars (disabled by default)
+
+2019-04-05 - 0.6
+	* add drafts folder
+	* add application icon
+	* message menu: add find messages/subscribe board
+	* bug fix: do not download messages from untrusted IDs
+
+2019-01-04 - 0.5
+	* messages can now be marked (starred messages)
+	* collapse threads with no unread messages (can be disabled via menu)
+	* add menu item to mark thread as read
+	* add menu item to delete a message
+	* Recently Received folder: add option to show only messages from
+	  subscribed boards
+	* optimize message download
+	* enable fast message check by default for new installations
+
+2018-09-10 - 0.4
+	* add option for fast message check on startup
+	* fix sending of messages containing CDATA delimiters
+	* highlight search results (WebView only)
+	* add icons with 2x resolution
+	* local identities can now be exported
+	* configurable download/upload priorities
+
+2018-07-01 - 0.3
+	* support message search
+	* add virtual folder for recently received messages
+	* support database maintenance
+
+2018-06-02 - 0.2
+	* support viewing of attachments
+	* support link detection in messages
+	* improve identity management
+	* some minor UI improvements
+
+2018-05-19 - 0.1.1
+	* fix termination of trustlist download on invalid trust list
+
+2018-05-18 - 0.1
+	* fix identity and list downloads from previous days
+	* first beta release
+
+2018-05-11 - 0.0.11
+	* trust levels are now configurable via settings
+	* support single-use identities
+	* allow deletion of messages from outbox
+	* many minor bug fixes and UI improvements
+
+2018-04-20 - 0.0.10
+	* support import of FMS database
+	* add message navigation menu
+	* various minor bug fixes
+
+2018-04-06 - 0.0.9
+	* add local folders (Outbox/Sent)
+	* identity management: show more information about selected identity
+	* switching between online/offline mode is now properly handled
+	* improve recovery on FCP disconnects and other errors
+
+2018-03-16 - 0.0.8
+	* new download strategy
+	  - avoid retrying failed requests from previous days
+	  - inactive identities are requested less frequently
+	  - start message downloads earlier: no longer wait until all message
+	    lists are finished
+
+2018-02-18 - 0.0.7
+	* support publishing of trustlists
+	  - generated CAPTCHAs are similar to SimpleCaptcha in reference client
+	* new identity management features:
+	  - creation of new identities
+	  - identity announcement via image CAPTCHAs
+
+2018-01-21 - 0.0.6
+	* fix import of identities via XML
+	* unbreak sending of messages
+	* support deletion of local identities
+
+2018-01-19 - 0.0.5
+	* prevent XXE injection (critical security fix)
+	* validate/sanitize data from XML files
+	* store trust comments and attachments
+	* add option to ignore identities with NULL trust
+
+2018-01-05 - 0.0.4
+	* User Interface
+	  - add settings dialog
+	  - use breeze/oxygen icons
+	  - various other UI improvements
+	* use java.util.logging
+	* add license
+
+2017-12-02 - 0.0.3
+	* support identity and message insert
+	* add build.xml for Apache Ant
+
+2017-07-01 - 0.0.2
+	* use SQLite for storage
+
+2017-05-28 - 0.0.1
+	* initial release

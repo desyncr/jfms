@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<project name="jfms" basedir="." default="dist" xmlns:sonar="antlib:org.sonar.ant">
+	<property name="src.dir" value="src"/>
+	<property name="testsrc.dir" value="test"/>
+	<property name="build.dir" value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="testclasses.dir" value="${build.dir}/test"/>
+	<property name="dist.dir" value="${build.dir}/dist"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="resources.dir" value="resources"/>
+	<property name="main-class" value="jfms.Jfms"/>
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+	</path>
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	<target name="compile">
+		<mkdir dir="${classes.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" debug="on">
+			<compilerarg value="-Xlint"/>
+		</javac>
+		<copy todir="${classes.dir}">
+			<fileset dir="${resources.dir}" excludes="**/*.svg"/>
+		</copy>
+		<copy file="UNLICENSE" todir="${classes.dir}"/>
+	</target>
+	<target name="dist" depends="compile">
+		<mkdir dir="${dist.dir}"/>
+		<jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+		</jar>
+	</target>
+	<target name="bundle" depends="compile">
+		<mkdir dir="${dist.dir}"/>
+		<propertyfile file="${classes.dir}/info.properties">
+			<entry  key="jdbc.license" value="by xerial.org (Apache License 2.0)"/>
+		</propertyfile>
+		<jar destfile="${dist.dir}/${ant.project.name}-bundle.jar">
+			<fileset dir="${classes.dir}"/>
+			<archives>
+				<zips>
+					<fileset dir="lib" includes="**/*jdbc*.jar"/>
+				</zips>
+			</archives>
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+		</jar>
+	</target>
+	<target name="run" depends="dist">
+		<java fork="true" classname="${main-class}">
+			<classpath>
+				<path refid="classpath"/>
+				<path location="${dist.dir}/${ant.project.name}.jar"/>
+			</classpath>
+		</java>
+	</target>
+	<target name="compile-tests" depends="compile">
+		<mkdir dir="${testclasses.dir}"/>
+		<javac srcdir="${testsrc.dir}" destdir="${testclasses.dir}" includeantruntime="false" debug="on">
+			<classpath>
+				<path refid="classpath"/>
+				<path location="${classes.dir}"/>
+			</classpath>
+			<compilerarg value="-Xlint"/>
+		</javac>
+	</target>
+	<target name="unit" description="Runs the unit tests" depends="compile-tests">
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath>
+				<path refid="classpath"/>
+				<path location="${classes.dir}"/>
+				<pathelement location="${testclasses.dir}"/>
+			</classpath>
+			<formatter type="plain" usefile="true"/>
+			<batchtest fork="yes">
+				<fileset dir="${testclasses.dir}"/>
+			</batchtest>
+		</junit>
+	</target>
+
+	<!-- Define the SonarQube project properties -->
+	<property name="sonar.host.url" value="http://localhost:9000"/>
+	<property name="sonar.projectKey" value="org.sonarqube:sonarqube-scanner-ant"/>
+	<property name="sonar.projectName" value="${ant.project.name}"/>
+	<property name="sonar.projectVersion" value="1.0"/>
+	<property name="sonar.sources" value="src"/>
+	<property name="sonar.java.binaries" value="build"/>
+	<property name="sonar.java.libraries" value="lib/*.jar"/>
+
+	<!-- Define SonarQube Scanner for Ant Target -->
+	<target name="sonar">
+		<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+			<!-- Update the following line, or put the "sonarqube-ant-task-*.jar" file in your "$HOME/.ant/lib" folder -->
+			<classpath path="path/to/sonar/ant/task/lib/sonarqube-ant-task-*.jar"/>
+		</taskdef>
+
+		<!-- Execute SonarQube Scanner for Ant Analysis -->
+		<sonar:sonar/>
+	</target>
+</project>
